@@ -1,0 +1,5 @@
+git 拉取远程分支并创建本地分支	git checkout -b 本地分支名x origin/远程分支名
+
+git 删除本地分支			git branch -d 本地分支名
+
+git 删除远程分支 			git push origin :远程分支名
