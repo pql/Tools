@@ -134,20 +134,21 @@ export const checkUrl = (url) => {
  *      example
  *          var bool = checkIp('192.168.0.197');
  */
-export const checkIp = (ip) => {  
-    var reSpaceCheck = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/;  
-    if (reSpaceCheck.test(ip)){  
-        ip.match(reSpaceCheck);  
-        if (RegExp.$1 <= 255 && RegExp.$1 >= 0 && RegExp.$2 <= 255 && RegExp.$2 >=0  
-          &&RegExp.$3 <= 255 && RegExp.$3 >= 0 && RegExp.$4 <= 255 && RegExp.$4>=0){  
-            return true;   
-        }else{  
-            return false;  
-        }  
-    }else{  
-        return false;  
-    }  
-} 
+export const checkIp = (ip) => {
+  var reSpaceCheck = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
+  if (reSpaceCheck.test(ip)) {
+    ip.match(reSpaceCheck)
+    if (Number(RegExp.$1) <= 255 && Number(RegExp.$1) >= 0 && Number(RegExp.$2) <= 255 && Number(RegExp.$2) >= 0 &&
+        Number(RegExp.$3) <= 255 && Number(RegExp.$3) >= 0 && Number(RegExp.$4) <= 255 && Number(RegExp.$4) >= 0) {
+      return true
+    } else {
+      return false
+    }
+  } else {
+    return false
+  }
+}
+
 
 /**
  * 检验邮箱
