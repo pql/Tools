@@ -1,22 +1,21 @@
 /**
- * 校验是否为空(null/空串)
- * @param {*} str 被检验的变量
- * @returns boolean 返回通过验证的结果
+ * @description 校验是否为空(null/空串)
+ * @param {*} variable 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
  *      example
- *          var bool = checkNull('');
+ *          var bool = checkNotNull('');
  */
-export const checkNull = (str) => {
-	if(str == null || str == ""){
+export const checkNotNull = (variable) => {
+	if(variable == null || variable == ""){
 		return false;
 	}
 	return true;
 }
 
 /**
- * 校验是否为纯数字
- * js的isNaN函数
- * @param {*} num 被检验的变量
- * @returns boolean 返回通过验证的结果
+ * @description 校验是否为纯数字
+ * @param {Number} num 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
  *      example
  *          var bool = checkNum(1);
  *          var bool1 = checkNum('1');
@@ -29,33 +28,16 @@ export const checkNum = (num) => {
 }
 
 /**
- * 校验是否为纯数字(正则)
- * @param {*} num 被检验的变量
- * @returns boolean 返回通过验证的结果
- *      example
- *          var bool = checkStrNum(1);
- *          var bool1 = checkStrNum('1');
- */
-export const checkStrNum = (num) => {
-	//判断字符串是否为数字 （判断正整数 /^[1-9]+[0-9]*]*$/）
-	var re = /^[0-9]+.?[0-9]*$/; 
-	if (!re.test(num)){
-	   return false;
-	}
-	return true;
-}
-
-/**
- * 检验手机号
- * @param {*} phone 被检验的变量
- * @returns boolean 返回通过验证的结果
+ * @description 检验手机号格式是否匹配
+ * @param {String} phone 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
  *      example
  *          var bool = checkPhone(13337217033);
  *          var bool1 = checkPhone('13337217033');
  */
 export const checkPhone = (phone) => {
 	var reg = /^1[3|4|5|7|8][0-9]{9}$/; 
-	//验证规则,第一位是【1】开头，第二位有【3,4,5,7,8】，第三位及以后可以是【0-9】
+	// 验证规则,第一位是【1】开头，第二位有【3,4,5,7,8】，第三位及以后可以是【0-9】
     //	var reg = /^1[0-9]{10}$/;//不验证第二位，防止几年后新增号码段
 	if(!reg.test(phone)){
 		return false;
@@ -64,8 +46,40 @@ export const checkPhone = (phone) => {
 }
 
 /**
- * 验证座机号
- * @param {*} tel 被检验的变量
+ * @description 检验qq格式是否通过
+ * @param {String} qq 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
+ *      example
+ *          var bool = checkQQ('3464769311');
+ */
+export const checkQQ = (qq) => {
+	//验证规则,5至11位
+	var reg = /^[1-9][0-9]{4,10}$/; 
+	if(!reg.test(qq)){
+		return false;
+	}
+	return true;
+}
+
+/**
+ * @description 检验wechat账号格式是否通过
+ * @param {String} wechat 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
+ *      example
+ *          var bool = checkQQ('caibaojian_com');
+ */
+export const checkWechat = (wechat) => {
+	//验证规则,6至20位，以字母开头，字母，数字，减号，下划线
+	var reg = /^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/; 
+	if(!reg.test(wechat)){
+		return false;
+	}
+	return true;
+}
+
+/**
+ * @description 验证座机号格式是否通过
+ * @param {String} tel 被检验的变量
  * @returns boolean 返回通过验证的结果
  *      example
  *          var bool = checkTel('13337217033');
@@ -79,9 +93,9 @@ export const checkTel = (tel) => {
 }
 
 /**
- * 检验身份证
- * @param {*} idCard 被检验的变量
- * @returns boolean 返回通过验证的结果
+ * @description 检验身份证号格式是否通过
+ * @param {String} idCard 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
  *      example
  *          var bool = checkIdCard('430876543234566013');
  */
@@ -113,9 +127,25 @@ export const checkIdCard = (idCard) => {
 }
 
 /**
- * 检验url地址
- * @param {*} url 被检验的变量
- * @returns boolean 返回通过验证的结果
+ * @description 检验用户名正则匹配是否通过
+ * @param {String} name 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
+ *      example
+ *          var bool = checkUserName('baidu');
+ */
+export const checkUserName = (name) => {
+	//用户名正则，4到16位（字母，数字，下划线，减号）
+	var reg = /^[a-zA-Z0-9_-]{4,16}$/;
+	if (!reg.test(name)) {
+		return false;
+	}
+	return true;
+}
+
+/**
+ * @description 检验url地址格式是否通过
+ * @param {String} url 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
  *      example
  *          var bool = checkUrl('http://www.baidu.com');
  */
@@ -128,9 +158,9 @@ export const checkUrl = (url) => {
 }
 
 /**
- * 校验ip
- * @param {*} ip 被检验的变量
- * @returns boolean 返回通过验证的结果
+ * @description 校验ip格式是否通过
+ * @param {String} ip 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
  *      example
  *          var bool = checkIp('192.168.0.197');
  */
@@ -149,11 +179,10 @@ export const checkIp = (ip) => {
   }
 }
 
-
 /**
- * 检验邮箱
- * @param {*} emailStr 被检验的变量
- * @returns boolean 返回通过验证的结果
+ * @description 检验邮箱合法性
+ * @param {String} emailStr 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
  *      example
  *          var bool = checkEmail('3565789876@qq.com');
  */
@@ -166,10 +195,9 @@ export const checkEmail = (emailStr) => {
 }
 
 /**
- * 检验日期
- * 格式为YYYY-MM-DD
- * @param {*} dateValue 被检验的变量
- * @returns boolean 返回通过验证的结果
+ * @description 检验日期 格式为YYYY-MM-DD
+ * @param {String} dateValue 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
  *      example
  *          var bool = checkDate('2019-09-09');
  */
@@ -182,9 +210,46 @@ export const checkDate = (dateValue) =>  {
 }
 
 /**
- * 检验金额
- * @param {*} money 被检验的变量
- * @returns boolean 返回通过验证的结果
+ * @description 匹配str是否为正数（大于等于零的正数、浮点数）
+ * @param {String} str
+ * @returns {Boolean}
+ */
+export const checkIsPosNumber = (str) => {
+	if(str==null||str=="") return false;
+	var result=str.match(/^\d*\.?\d+$/);
+	if(result==null)return false;
+	return true;
+}     
+
+/**
+ * @description 匹配str是否为负数（小于零的负数、浮点数）
+ * @param {String} str
+ * @returns {Boolean}
+ */
+export const checkIsNegNumber = (str) => {
+	if(str==null||str=="") return false;
+	var result=str.match(/^-\d*\.?\d+$/);
+	if(result==null)return false;
+	return true;
+}
+
+/**
+ * @description 匹配str是否为数字（正负数和双精度值）
+ * @param {String} str
+ * @returns {Boolean}
+ */
+export const checkIsNumber = (str) => {
+	if(str==null||str=="") return false;
+	var result=str.match(/^-?\d*\.?\d+$/);
+	if(result==null)return false;
+	return true;
+}
+
+
+/**
+ * @description 检验金额（最多保留2位有效数字,超出2位有效数字不通过）
+ * @param {String} money 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
  *      example
  *          var bool = checkMoney('6.88');
  */
@@ -211,9 +276,9 @@ export const checkMoney = (money) => {
 }
  
 /**
- * 检验否是汉字
- * @param {*} charValue 被检验的变量
- * @returns boolean 返回通过验证的结果
+ * @description 检验否是汉字
+ * @param {String} charValue 被检验的变量
+ * @returns {Boolean} 返回通过验证的结果
  *      example
  *          var bool = checkCharacter('王');
  */

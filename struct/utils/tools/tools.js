@@ -536,28 +536,6 @@ export function toggleClass(element, className) {
 }
 
 /**
- * @description 校验是否是ip
- * @param {String} ip 被检验的变量
- * @returns {Boolean} 返回通过验证的结果
- *      example
- *          var bool = checkIp('192.168.0.197');
- */
-export const checkIp = (ip) => {
-  var reSpaceCheck = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
-  if (reSpaceCheck.test(ip)) {
-    ip.match(reSpaceCheck)
-    if (Number(RegExp.$1) <= 255 && Number(RegExp.$1) >= 0 && Number(RegExp.$2) <= 255 && Number(RegExp.$2) >= 0 &&
-        Number(RegExp.$3) <= 255 && Number(RegExp.$3) >= 0 && Number(RegExp.$4) <= 255 && Number(RegExp.$4) >= 0) {
-      return true
-    } else {
-      return false
-    }
-  } else {
-    return false
-  }
-}
-
-/**
  * @description 检测对象是否是空对象(不包含任何可读属性)
  * @description 方法只既检测对象本身的属性，不检测从原型继承的属性
  * @param {Object} obj
