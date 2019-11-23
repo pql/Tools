@@ -546,5 +546,6 @@
         // 返回 A 对象
         return A;
     }
+    // 为全局对象绑定A框架， 并绑定别名 $
     window.$ = window.A = A;
 })(window);
