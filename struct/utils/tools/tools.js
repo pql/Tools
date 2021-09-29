@@ -1,4 +1,43 @@
 /**
+ * @description 函数柯里化
+ * @param {Function} fn 函数
+ * @param {Array} 要收集每次调用时传入的参数
+ * @returns {Function} 返回新的函数
+ *      example
+ *          let newIsType = currying((typing, val) => Object.prototype.toString.call(val) == `[object ${typing}]`);
+ *          let isString = newIsType("String");
+ *          let isNumber = newIsType("Number");
+ *          let isNull = newIsType("Null");
+ *          let isUndefined = newIsType("Undefined");
+ *          let isBoolean = newIsType("Boolean");
+ *          console.log(isString("Hello"))
+ */
+export function currying (fn, arr = []) { // arr 就是我们要收集每次调用时传入的参数
+  let len = fn.length; // 函数的长度 就是参数个数
+  return function (...args) {
+    let newArgs = [...arr, ...args];
+    if (newArgs.length == len) {
+      return fn(...newArgs);
+    } else {
+      return currying(fn, newArgs);
+    }
+  }
+}
+
+/**
+* @description 判断变量类型
+* @param {String} typing 变量类型
+* @param {Any} val 被检测的变量
+* @returns {Boolean} 返回变量是否是指定的变量类型
+*      example
+*          let result = isType("String", "hello world")
+*          console.log(result);
+*/
+export function isType(typing, val) {
+  return Object.prototype.toString.call(val) == `[object ${typing}]`;
+}
+
+/**
  * @description 防抖
  * @param {Function} func 回调函数，接收防抖函数执行完成后的结果
  * @param {Number} wait(ms) 防抖时间间隔（单位：ms）
@@ -9,36 +48,36 @@
  *          var debounce = debounce(function () {console.log (1) }, 10000, true);
  *          debounce.cancel();
  */
-export function debounce (func, wait, immediate) {
-    var timeout, result;
-    var debounced = function () {
-        var context = this;
-        var args = arguments;
+export function debounce(func, wait, immediate) {
+  var timeout, result;
+  var debounced = function () {
+    var context = this;
+    var args = arguments;
 
-        if (timeout) clearTimeout (timeout) 
+    if (timeout) clearTimeout(timeout)
 
-        if (immediate) {
-            // 如果已经执行过，不再执行
-            var callNow = !timeout
-            timeout = setTimeout (function () {
-                timeout = null;
-            }, wait)
-            if (callNow) result = func.apply (context, args);
-        }
-        else {
-            timeout = setTimeout (function () {
-                func.apply (context, args);
-            }, wait);
-        }
-        return result;
-    };
-
-    debounced.cancel = function () {
-        clearTimeout(timeout);
+    if (immediate) {
+      // 如果已经执行过，不再执行
+      var callNow = !timeout
+      timeout = setTimeout(function () {
         timeout = null;
-    };
+      }, wait)
+      if (callNow) result = func.apply(context, args);
+    }
+    else {
+      timeout = setTimeout(function () {
+        func.apply(context, args);
+      }, wait);
+    }
+    return result;
+  };
 
-    return debounced;
+  debounced.cancel = function () {
+    clearTimeout(timeout);
+    timeout = null;
+  };
+
+  return debounced;
 }
 
 
@@ -56,48 +95,48 @@ export function debounce (func, wait, immediate) {
  *          var throttle = throttle(function () {}, 1000, {leading: false}) 
  *          var throttle = throttle(function () {}, 1000, {trailing: false}) 
  *          throttle.cancel()
- */             
-export function throttle (func, wait, options) {
-    var timeout, context, args, result;
-    var previous = 0;
-    if (!options) options = {};
+ */
+export function throttle(func, wait, options) {
+  var timeout, context, args, result;
+  var previous = 0;
+  if (!options) options = {};
 
-    var later = function () {
-        previous = options.leading === false ? 0 : new Date().getTime();
-        timeout = null;
-        func.apply (context, args);
-        if (!timeout) context = args = null;
-    };
+  var later = function () {
+    previous = options.leading === false ? 0 : new Date().getTime();
+    timeout = null;
+    func.apply(context, args);
+    if (!timeout) context = args = null;
+  };
 
-    var throttled = function () {
-        var now = new Date().getTime();
-        if (!previous && options.leading === false) previous = now;
-        // 下次触发 func 剩余的时间
-        var remaining = wait - (now - previous);
-        context = this;
-        args = arguments;
-        // 如果没有剩余的时间了或者你修改了系统时间
-        if (remaining <= 0 || remaining > wait) {
-            if (timeout) {
-                clearTimeout(timeout);
-                timeout = null;
-            }
-            previous = now;
-            func.apply(context, args)
-            if (!timeout) context = args = null;
-        }
-        else if (!timeout && options.trailing !== false) {
-            timeout = setTimeout(later, remaining);
-        }
-    };
-
-    throttled.cancel = function() {
+  var throttled = function () {
+    var now = new Date().getTime();
+    if (!previous && options.leading === false) previous = now;
+    // 下次触发 func 剩余的时间
+    var remaining = wait - (now - previous);
+    context = this;
+    args = arguments;
+    // 如果没有剩余的时间了或者你修改了系统时间
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
         clearTimeout(timeout);
-        previous = 0;
         timeout = null;
-    };
+      }
+      previous = now;
+      func.apply(context, args)
+      if (!timeout) context = args = null;
+    }
+    else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+  };
 
-    return throttled;
+  throttled.cancel = function () {
+    clearTimeout(timeout);
+    previous = 0;
+    timeout = null;
+  };
+
+  return throttled;
 }
 
 
@@ -109,12 +148,12 @@ export function throttle (func, wait, options) {
  *          var array = [{name: 'lisi', age: 21}, {name: 'lisi', age: 21}]
  *          var array = [1,2,3,1,4]
  */
-export function unique (array) {
-    var obj = {};
-    return array.filter(function(item, index, array){
-        return obj.hasOwnProperty(typeof item + JSON.stringify(item)) ?
-            false : (obj[typeof item + JSON.stringify(item)] = true)
-    })
+export function unique(array) {
+  var obj = {};
+  return array.filter(function (item, index, array) {
+    return obj.hasOwnProperty(typeof item + JSON.stringify(item)) ?
+      false : (obj[typeof item + JSON.stringify(item)] = true)
+  })
 }
 
 /**
@@ -130,8 +169,8 @@ export function accDiv(arg1, arg2) {
   var t2 = 0
   var r1
   var r2
-  try { t1 = arg1.toString().split('.')[1].length } catch (e) {}
-  try { t2 = arg2.toString().split('.')[1].length } catch (e) {}
+  try { t1 = arg1.toString().split('.')[1].length } catch (e) { }
+  try { t2 = arg2.toString().split('.')[1].length } catch (e) { }
   r1 = Number(arg1.toString().replace('.', ''))
   r2 = Number(arg2.toString().replace('.', ''))
   return accMul((r1 / r2), Math.pow(10, t2 - t1))
@@ -149,8 +188,8 @@ export function accMul(arg1, arg2) {
   var m = 0
   var s1 = arg1.toString()
   var s2 = arg2.toString()
-  try { m += s1.split('.')[1].length } catch (e) {}
-  try { m += s2.split('.')[1].length } catch (e) {}
+  try { m += s1.split('.')[1].length } catch (e) { }
+  try { m += s2.split('.')[1].length } catch (e) { }
   return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Math.pow(10, m)
 }
 
@@ -194,11 +233,11 @@ export function Subtr(arg1, arg2) {
  */
 export const hideMobileInfo = mobile => {
   let newMobile = '';
-　　if (mobile.length > 7) {
-      newMobile=mobile.substr(0, 3) + '****' + mobile.substr(7);
-      return newMobile;
+  if (mobile.length > 7) {
+    newMobile = mobile.substr(0, 3) + '****' + mobile.substr(7);
+    return newMobile;
   } else {
-      return mobile;
+    return mobile;
   }
 }
 
@@ -207,25 +246,25 @@ export const hideMobileInfo = mobile => {
  * @param {String} email
  * @returns {String} 返回已经脱敏的邮箱字符串
  */
-export const hideEmailInfo= email => {
-  if (String (email).indexOf ('@') > 0) {
-      let newEmail, str = email.split('@'), _s = '';
+export const hideEmailInfo = email => {
+  if (String(email).indexOf('@') > 0) {
+    let newEmail, str = email.split('@'), _s = '';
 
-      if (str[0].length > 4) {
-          _s = str[0].substr (0, 4);
-          for (let i = 0; i < str[0].length - 4; i++) {
-              _s += '*';
-          }
-      } else {
-          _s = str[0].substr (0, 1);
-          for (let i = 0; i < str[0].length - 1; i++) {
-              _s += '*';
-          }
+    if (str[0].length > 4) {
+      _s = str[0].substr(0, 4);
+      for (let i = 0; i < str[0].length - 4; i++) {
+        _s += '*';
       }
-      newEmail = _s + '@' + str[1];
-      return newEmail;
+    } else {
+      _s = str[0].substr(0, 1);
+      for (let i = 0; i < str[0].length - 1; i++) {
+        _s += '*';
+      }
+    }
+    newEmail = _s + '@' + str[1];
+    return newEmail;
   } else {
-      return email;
+    return email;
   }
 }
 
@@ -240,7 +279,7 @@ export const hideEmailInfo= email => {
  *        parseTime(Date.now(), '{y}:{m}:{d}')
  *        // "2019:07:09:09:02 二"
  */
-export function parseTime (time, cFormat) {
+export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
     return null
   }
@@ -284,7 +323,7 @@ export function parseTime (time, cFormat) {
  *        formatTime(1552635372, '{y}:{m}')
  *        // "2019:03"
  */
-export function formatTime (time, option) {
+export function formatTime(time, option) {
   time = +time * 1000
   const d = new Date(time)
   const now = Date.now()
@@ -330,12 +369,12 @@ export function getByteLen(val) {
  *        param({ a:1,b:2 })
  *        // "a=1&b=2"
  */
-export function param (json) {
+export function param(json) {
   if (!json) return ''
   return cleanArray(Object.keys(json).map(key => {
     if (json[key] === undefined) return ''
     return encodeURIComponent(key) + '=' +
-            encodeURIComponent(json[key])
+      encodeURIComponent(json[key])
   })).join('&')
 }
 
@@ -347,7 +386,7 @@ export function param (json) {
  *        param2Obj('https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&rsv_idx=1&tn=baidu')
  *        // {ie: "utf-8", f: "8", rsv_bp: "1", rsv_idx: "1", tn: "baidu"}
  */
-export function param2Obj (url) {
+export function param2Obj(url) {
   const search = url.split('?')[1]
   if (!search) {
     return {}
@@ -363,7 +402,7 @@ export function param2Obj (url) {
  *        getQueryObject('https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&rsv_idx=1&tn=baidu')
  *        // {ie: "utf-8", f: "8", rsv_bp: "1", rsv_idx: "1", tn: "baidu"}
  */
-export function getQueryObject (url) {
+export function getQueryObject(url) {
   url = url == null ? window.location.href : url
   const search = url.substring(url.lastIndexOf('?') + 1)
   const obj = {}
@@ -386,7 +425,7 @@ export function getQueryObject (url) {
  *        cleanArray(["1", "", "2", undefined, "e"])
  *        // ["1", "2", "e"]
  */
-export function cleanArray (actual) {
+export function cleanArray(actual) {
   const newArray = []
   for (let i = 0; i < actual.length; i++) {
     if (actual[i]) {
@@ -504,7 +543,7 @@ export function hasClass(element, className) {
  * @param {String} className 类名
  * @returns void
  */
-export function removeClass (element, className) {
+export function removeClass(element, className) {
   if (!hasClass(element, className)) {
     return
   }
@@ -541,7 +580,7 @@ export function toggleClass(element, className) {
  * @param {Object} obj
  * @returns {Boolean}
  */
-export function isOwnEmpty (obj) {
+export function isOwnEmpty(obj) {
   for (var name in obj) {
     if (obj.hasOwnProperty(name)) {
       return false
